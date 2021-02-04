@@ -1,10 +1,10 @@
 # healenium-appium-mvn
 Java project with healenium-appium usage example.
 
-It uses standart Calculator application on Android-emulator.
+It uses standart Calculator Application on Android Device Emulator.
 
 ## How to start
-### 1.Start Healenium backend from infra folder
+### 1.Start Healenium backend from test/resources directory
 
 ```cd src/test/resources```
 
