@@ -4,7 +4,7 @@ Java project with healenium-appium usage example.
 It uses standart Calculator Application on Android Device Emulator.
 
 ## How to start
-### 1.Start Healenium backend from test/resources directory
+### 1.Start Healenium backend from test/resources directory.
 
 ```cd src/test/resources```
 
