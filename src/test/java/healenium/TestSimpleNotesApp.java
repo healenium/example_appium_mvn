@@ -13,6 +13,7 @@ package healenium; /**
 
 import com.epam.healenium.appium.DriverWrapper;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
@@ -20,6 +21,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -32,7 +34,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class TestEmulatorCalcApp {
+public class TestSimpleNotesApp {
 
     private static AppiumDriver appiumDriver;
 
@@ -43,11 +45,10 @@ public class TestEmulatorCalcApp {
 
         dc.setCapability(MobileCapabilityType.DEVICE_NAME, "emulator-5554");
         dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
-        dc.setCapability("appPackage", "com.android.calculator2");
-        dc.setCapability("appActivity", ".Calculator");
-
-        dc.setCapability("test_data:testResultOk:result", "testResultHealed:resul");
-        dc.setCapability("test_data:testFindElementsOk:digit_7", "testFindElementsHealed:digit_77");
+        dc.setCapability("appPackage", "com.epam.healenium.appium.testapp");
+        dc.setCapability("appActivity", ".MainActivity");
+        dc.setCapability(MobileCapabilityType.APP, "apps/simple-notes-app.apk");
+        dc.setCapability("test_data:testFindNotesButtonOk://*[contains(@text,'NOTES')]", "testClickNotesButtonHealed://*[contains(@text,'NNOTES')]");
 
         //declare delegate driver
         appiumDriver = new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"), dc);
@@ -57,43 +58,23 @@ public class TestEmulatorCalcApp {
 
     @SneakyThrows
     @Test
-    public void testResultOk() {
-        testAddOperation();
-        assertEquals("61", appiumDriver.findElementById("result").getText());
+    public void testFindNotesButtonOk() {
+        MobileElement notesButtonOk = (MobileElement) appiumDriver.findElement(By.xpath("//*[contains(@text,'NOTES')]"));
     }
 
     @SneakyThrows
     @Test
-    public void testResultHealed() {
-        testAddOperation();
-        assertEquals("61", appiumDriver.findElementById("resul").getText());
+    public void testClickNotesButtonHealed() {
+        MobileElement notesButtonHealed = (MobileElement) appiumDriver.findElement(By.xpath("//*[contains(@text,'NNOTES')]"));
+        Assertions.assertEquals(notesButtonHealed.getText(), "NOTES");
+        notesButtonHealed.click();
     }
 
+    @SneakyThrows
     @Test
-    public void testFindElementsOk() {
-        List<MobileElement> elements = appiumDriver.findElements(By.id("digit_7"));
-        assertEquals("7", elements.get(0).getText(), "Digit 7");
-    }
-
-    @Test
-    public void testFindElementsHealed() {
-        List<MobileElement> elements = appiumDriver.findElements(By.id("digit_77"));
-        assertEquals( "7", elements.get(0).getText(), "Healed digit 7");
-    }
-
-    private void testAddOperation() {
-        MobileElement el1 = (MobileElement) appiumDriver.findElementById("digit_2");
-        el1.click();
-        MobileElement el2 = (MobileElement) appiumDriver.findElementById("digit_5");
-        el2.click();
-        MobileElement el3 = (MobileElement) appiumDriver.findElementByAccessibilityId("plus");
-        el3.click();
-        MobileElement el4 = (MobileElement) appiumDriver.findElementById("digit_3");
-        el4.click();
-        MobileElement el5 = (MobileElement) appiumDriver.findElementById("digit_6");
-        el5.click();
-        MobileElement el6 = (MobileElement) appiumDriver.findElementByAccessibilityId("equals");
-        el6.click();
+    public void testClickNotes3Ok() {
+        MobileElement note3Ok = (MobileElement) appiumDriver.findElement(By.xpath("//*[contains(@text,'Note 3')]"));
+        note3Ok.click();
     }
 
     @AfterAll
