@@ -51,12 +51,8 @@ public class TestEmulatorCalcApp {
 
         //declare delegate driver
         appiumDriver = new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"), dc);
-        log.info("!!!{}", appiumDriver.getContext());
-        log.info("!!!{}", appiumDriver);
         //adding healing support
         appiumDriver = DriverWrapper.wrap(appiumDriver);
-        log.info("!!!{}", appiumDriver.getContext());
-        log.info("!!!{}", appiumDriver);
     }
 
     @SneakyThrows
