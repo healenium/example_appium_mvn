@@ -51,7 +51,7 @@ public class TestSimpleNotesApp {
         appiumDriver = new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"), dc);
         //adding healing support
         appiumDriver = DriverWrapper.wrap(appiumDriver);
-        //appiumDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        appiumDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @SneakyThrows
