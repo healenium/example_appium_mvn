@@ -11,13 +11,13 @@ services:
     restart: always
     environment:
       - POSTGRES_DB=healenium
-      - POSTGRES_USER=heaqlenium_user
+      - POSTGRES_USER=healenium_user
       - POSTGRES_PASSWORD=YDk2nmNs4s9aCP6K
     networks:
       - healenium
 
   healenium:
-    image: healenium/hlm-backend:3.1.4
+    image: healenium/hlm-backend:3.0.8
     ports:
       - "7878:7878"
     links:

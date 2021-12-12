@@ -7,30 +7,12 @@
     <groupId>org.example</groupId>
     <artifactId>example-appium-mvn</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-epam-healenium</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/epam/healenium</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>bintray-epam-healenium</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/epam/healenium</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencies>
         <dependency>
             <groupId>com.epam.healenium</groupId>
             <artifactId>healenium-appium</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
