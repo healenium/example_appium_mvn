@@ -17,7 +17,8 @@ services:
       - healenium
 
   healenium:
-    image: healenium/hlm-backend:3.0.8
+    image: healenium/hlm-backend:3.2.1
+    container_name: healenium
     ports:
       - "7878:7878"
     links:
@@ -28,6 +29,42 @@ services:
       - SPRING_POSTGRES_USER=healenium_user
       - SPRING_POSTGRES_PASSWORD=YDk2nmNs4s9aCP6K
       - SPRING_POSTGRES_URL=jdbc:postgresql://db:5432/healenium?currentSchema=healenium
+    networks:
+      - healenium
+
+  selector-imitator:
+    image: healenium/hlm-selector-imitator:1.1
+    container_name: selector-imitator
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    networks:
+      - healenium
+
+  hlm-proxy:
+    image: healenium/hlm-proxy:test
+    container_name: hlm-proxy
+    ports:
+      - "8085:8085"
+    environment:
+      - "recovery-tries=1"
+      - "score-cap=.6"
+      - "heal-enabled=true"
+      - SERVERHOST=localhost
+      - SERVER_HOST=7878
+#      - SELENIUM_HOST=7878
+#      - APPIUM_HOST=7878
+#      - IMITATE_HOST=8000
+    networks:
+      - healenium
+
+  hlm-selenium-webview:
+    image: healenium/hlm-selenium-3-standalone-tigervnc:0.1.1
+    restart: on-failure
+    container_name: hlm-selenium-webview
+    ports:
+      - "8086:6080"
+      - "4444:4444"
     networks:
       - healenium
 
