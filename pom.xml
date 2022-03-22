@@ -12,7 +12,7 @@
         <dependency>
             <groupId>com.epam.healenium</groupId>
             <artifactId>healenium-appium</artifactId>
-            <version>1.2</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -20,14 +20,15 @@
             <version>5.4.0</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.13.0</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.0.1-jre</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.13.0</version>
+            <groupId>com.github.dhiraj072</groupId>
+            <artifactId>random-word-generator</artifactId>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
     <build>
