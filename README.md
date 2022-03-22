@@ -1,7 +1,7 @@
 # healenium-appium-mvn
 Java project with healenium-appium usage example.
 
-It uses standart Calculator Application on Android Device Emulator.
+It uses custom Login Form Applicaion on Android Device Emulator.
 
 ## How to start
 ### 1.Start Healenium backend from test/resources directory.
