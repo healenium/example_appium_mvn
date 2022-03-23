@@ -14,4 +14,4 @@ Verify that images ```healenium/hlm-backend:3.0.8``` and ```postgres:11-alpine``
 
 ### 2.Set up and run Appium Server and Android Device Emulator.
 
-### 3.Run JUnit5 test TestEmulatorAppCalc form src/test/java/healenium directory.
+### 3.Run JUnit5 test TestEmulatorLoginForm form src/test/java/healenium directory.
