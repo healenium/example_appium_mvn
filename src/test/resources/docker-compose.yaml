@@ -1,14 +1,15 @@
-version: "3.3"
+version: "3.9"
 
 services:
 
-  db:
+  postgres-db:
     image: postgres:11-alpine
+    container_name: postgres-db
+    restart: always
     ports:
       - "5432:5432"
     volumes:
       - ./db/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-    restart: always
     environment:
       - POSTGRES_DB=healenium
       - POSTGRES_USER=healenium_user
@@ -17,18 +18,19 @@ services:
       - healenium
 
   healenium:
-    image: healenium/hlm-backend:3.2.1
+    image: healenium/hlm-backend:3.2.3
     container_name: healenium
+    restart: on-failure
     ports:
       - "7878:7878"
     links:
-      - db
+      - postgres-db
     environment:
-      - SPRING_CONTAINER_NAME=healenium
       - SPRING_POSTGRES_DB=healenium
+      - SPRING_POSTGRES_SCHEMA=healenium
       - SPRING_POSTGRES_USER=healenium_user
       - SPRING_POSTGRES_PASSWORD=YDk2nmNs4s9aCP6K
-      - SPRING_POSTGRES_URL=jdbc:postgresql://db:5432/healenium?currentSchema=healenium
+      - SPRING_POSTGRES_DB_HOST=postgres-db
     networks:
       - healenium
 
@@ -42,31 +44,22 @@ services:
       - healenium
 
   hlm-proxy:
-    image: healenium/hlm-proxy:test
+    image: healenium/hlm-proxy:1.1.0
     container_name: hlm-proxy
+    restart: on-failure
     ports:
       - "8085:8085"
     environment:
-      - "recovery-tries=1"
-      - "score-cap=.6"
-      - "heal-enabled=true"
-      - SERVERHOST=localhost
-      - SERVER_HOST=7878
-#      - SELENIUM_HOST=7878
-#      - APPIUM_HOST=7878
-#      - IMITATE_HOST=8000
-    networks:
-      - healenium
-
-  hlm-selenium-webview:
-    image: healenium/hlm-selenium-3-standalone-tigervnc:0.1.1
-    restart: on-failure
-    container_name: hlm-selenium-webview
-    ports:
-      - "8086:6080"
-      - "4444:4444"
+      - RECOVERY_TRIES=1
+      - SCORE_CAP=.6
+      - HEAL_ENABLED=true
+      - SELENIUM_HOST=hlm-selenoid
+      - HEALENIUM_HOST=healenium
+      - IMITATE_HOST=selector-imitator
+      - SELENIUM_URL=/wd/hub
     networks:
       - healenium
 
 networks:
   healenium:
+    name: healenium
