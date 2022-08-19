@@ -10,7 +10,7 @@ It uses custom Login Form Applicaion on Android Device Emulator.
 
 ```docker-compose up -d```
 
-Verify that images ```healenium/hlm-backend:3.0.8``` and ```postgres:11-alpine``` are up and running
+Verify that images ```healenium/hlm-backend``` and ```postgres:11-alpine``` are up and running
 
 ### 2.Set up and run Appium Server and Android Device Emulator.
 
