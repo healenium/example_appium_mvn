@@ -1,4 +1,4 @@
-# Healenium-Appium Example
+# Healenium
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/healenium/hlm-backend.svg?maxAge=25920)](https://hub.docker.com/u/healenium)
 [![License](https://img.shields.io/badge/license-Apache-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -8,52 +8,159 @@
 
 [Overall information](#overall-information)
 
-[Compatibility with OSs](#compatibility-with-oss)
+[Healenium installation](#healenium-installation)
+* [Healenium with Selenoid](#run-healenium-with-selenoid)
+* [Healenium with Selenium-Grid](#run-healenium-with-selenium-grid)
 
-[Healenium Appium installation](#healenium-appium-installation)
+[Healenium installation without Docker](#healenium-installation-without-docker)
 
+[Language Examples](#language-examples)
+* [Java](#java)
+* [Python](#python)
+* [C#](#c#)
+* [JavaScript](#javascript)
 
 ### Overall information
-Healenium-Appium example demos java project to test both web app and native apps using Appium.
+Self-healing framework based on Selenium and able to use all Selenium supported languages like Java/Python/JS/C#
+Healenium acts as proxy between client and selenium server.
 
-### Compatibility with OSs
+`Docker-compose` includes the following services:
+- `postgres-db` (PostgreSQL database to store etalon selector / healing / report)
+- `hlm-proxy` (Proxy client request to Selenium server)
+- `hlm-backend` (CRUD service)
+- `selector imitator` (Convert healed locator to convenient format)
+- `selenoid`/`selenium-grid` (Selenium server)
 
-Support: Android Web, Android native app, IOS Web.
-
-NOT Support: IOS native app.
-
-> Unfortunately, Healenium-Appium doesn't support IOS native apps at present.
-> But we plan to release to support IOS apps in the near future.
-
-
-### Healenium-Appium installation
+### Healenium installation
 
 Clone Healenium repository:
 ```sh
 git clone https://github.com/healenium/healenium.git
 ```
 
-Setup appium server and device. And install our android app: /resource/apps/login-form.apk
+#### Run Healenium with Selenoid
 
-> Before run healenium you have to specify appium server host and port using appropriate environment variables of hlm-proxy container: APPIUM_SERVER_URL
+> Note: `browsers.json` consists of target browsers and appropriate versions.
+> Before run healenium you have to manually pull selenoid browser docker images with version specified in browsers.json
 
-Example setup hlm-proxy's env variables in case of local Appium server (specified by default):
+Example pull selenoid chrome image:
+```sh
+docker pull selenoid/vnc:chrome_102.0
+```
+Full list of browser images you can find [here](https://hub.docker.com/u/selenoid)
 
-```dockerfile
-    - APPIUM_SERVER_URL=http://host.docker.internal:4723/wd/hub
+Run healenium with Selenoid:
+```sh
+docker-compose up -d
+```
+
+#### Run Healenium with Selenium-Grid:
+```sh
+docker-compose -f docker-compose-selenium-grid.yaml up -d
 ```
 
 Run Healenium with Appium only
 
 ```sh
-docker-compose -f healenium/docker-compose-appium.yaml up -d
+docker-compose -f docker-compose-appium.yaml up -d
 ```
+More details about integration Healenium with Appium [here](https://github.com/healenium/healenium-appium)
 
-Run example tests
+### Healenium installation without Docker
+
+Go to shell-installation:
 
 ```sh
-mvn clean test
+cd shell-installatio
 ```
+
+There are locally and remote options to run healenium.
+
+1. Start PostgeSql server.
+- Create user (healenium_user/YDk2nmNs4s9aCP6K) (example data)
+- Set attribute 'Can Login' (true) to user
+- Create database (healenium) and set owner healenium_user
+- Create schema (healenium) and set owner healenium_user
+
+2. Specify your db user and password data in the bash script 'start_healenium.sh'.
+
+3. Setup selenium server (selenium-grid)
+
+Download healenium services
+```sh
+download_services.sh
+```
+
+Run shell command to launch healenium components 
+```sh
+start_healenium.sh
+```
+
+
+### Language examples
+
+```
+    /**
+    * "http://127.0.0.1:8085" OR "http://localhost:8085" if you are using locally running proxy server
+    *
+    * if you want to use a remote proxy server,
+    * specify the ip address of this server - "http://remote_ip_address:8085"
+    */
+```
+
+###### Java:
+```java
+    String nodeURL = "http://localhost:8085";
+
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+
+    WebDriver driver = new RemoteWebDriver(new URL(nodeURL), options);
+```
+
+###### Python
+```py
+    nodeURL = "http://localhost:8085"
+    
+    options = webdriver.ChromeOptions()
+    options.add_argument('--no-sandbox')
+    
+    current_webdriver = webdriver.Remote(
+        command_executor=nodeURL,
+        desired_capabilities=webdriver.DesiredCapabilities.CHROME,
+        options=options,
+    )
+```
+
+###### C#
+```csharp
+    String nodeURL = "http://localhost:8085";
+
+    ChromeOptions optionsChrome = new ChromeOptions();
+    optionsChrome.AddArguments("--no-sandbox");
+    
+    RemoteWebDriver driverChrome = new RemoteWebDriver(new Uri(nodeURL), optionsChrome);
+```
+
+###### JavaScript
+```javascript
+    const NODE_URL = "http://localhost:8085";
+
+    let args = [
+        "--no-sandbox"
+    ];
+
+    let chromeCapabilities = selenium.Capabilities.chrome()
+        .set('chromeOptions', { args });
+
+    let builder = new selenium.Builder()
+        .forBrowser('chrome')
+        .withCapabilities(chromeCapabilities);
+
+    let driver = await builder.usingServer(NODE_URL).build();
+```
+
 
 ## Community / Support
 
