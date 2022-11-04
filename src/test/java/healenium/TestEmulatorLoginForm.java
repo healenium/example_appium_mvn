@@ -1,14 +1,11 @@
 package healenium;
 
-import com.epam.healenium.appium.wrapper.DriverWrapper;
 import com.github.dhiraj072.randomwordgenerator.RandomWordGenerator;
 import com.github.dhiraj072.randomwordgenerator.datamuse.DataMuseRequest;
 import com.github.dhiraj072.randomwordgenerator.datamuse.WordsRequest;
 import com.github.dhiraj072.randomwordgenerator.exceptions.DataMuseException;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +13,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
+import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -34,17 +32,20 @@ public class TestEmulatorLoginForm {
 
     @SneakyThrows
     @BeforeAll
-    public static void setUp() throws MalformedURLException {
-        DesiredCapabilities dc = new DesiredCapabilities();
-
-        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "emulator-5554");
+    public static void setUp() {
+        MutableCapabilities dc = new MutableCapabilities();
         dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
-        dc.setCapability(MobileCapabilityType.APP, "https://github.com/healenium/example_appium_mvn/raw/feature/EPMHLM-209/src/test/resources/apps/login-form.apk");
+        dc.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.example.healenium_appium_example_login");
+        dc.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, ".ui.login.LoginActivity");
+        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "emulator-5554");
+        dc.setCapability("nativeWebScreenshot",true);
 
-        //declare delegate driver
-        appiumDriver = new AndroidDriver<AndroidElement>(new URL("http://localhost:4723/wd/hub"), dc);
-//        adding healing support
-        appiumDriver = DriverWrapper.wrap(appiumDriver);
+        String nodeURL = "http://localhost:8085";
+
+        appiumDriver = new AppiumDriver(new URL(nodeURL), dc);
+        appiumDriver.manage().timeouts()
+                .pageLoadTimeout(ofMinutes(5))
+                .implicitlyWait(ofSeconds(10));
     }
 
 
@@ -56,8 +57,7 @@ public class TestEmulatorLoginForm {
         WebElement username = appiumDriver.findElement(By.id("username"));
         WebElement login = appiumDriver.findElement(By.xpath(byXpath));
 
-        //change button text
-        ((MobileElement) username).setValue(randomWord);
+        username.sendKeys(randomWord);
 
         WebElement healedLogin = appiumDriver.findElement(By.xpath(byXpath));
         healedLogin.click();
