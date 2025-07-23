@@ -5,15 +5,13 @@ import com.github.dhiraj072.randomwordgenerator.datamuse.DataMuseRequest;
 import com.github.dhiraj072.randomwordgenerator.datamuse.WordsRequest;
 import com.github.dhiraj072.randomwordgenerator.exceptions.DataMuseException;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.remote.AndroidMobileCapabilityType;
-import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.android.options.UiAutomator2Options;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebElement;
 
 import java.net.URL;
@@ -33,26 +31,20 @@ public class TestEmulatorLoginForm {
     @SneakyThrows
     @BeforeAll
     public static void setUp() {
-        MutableCapabilities dc = new MutableCapabilities();
-        dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
-        dc.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "com.example.healenium_appium_example_login");
-        dc.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, ".ui.login.LoginActivity");
-        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "emulator-5554");
-        dc.setCapability("nativeWebScreenshot",true);
+        UiAutomator2Options options = new UiAutomator2Options()
+                .setAppPackage("com.example.healenium_appium_example_login")
+                .setAppActivity(".ui.login.LoginActivity")
+                .setDeviceName("emulator-5554");
 
         String nodeURL = "http://localhost:8085";
 
-        appiumDriver = new AppiumDriver(new URL(nodeURL), dc);
-        appiumDriver.manage().timeouts()
-                .pageLoadTimeout(ofMinutes(5))
-                .implicitlyWait(ofSeconds(10));
+        appiumDriver = new AppiumDriver(new URL(nodeURL), options);
     }
 
 
     @Test
     public void testFindElementsOk2() throws DataMuseException, InterruptedException {
-        WordsRequest customRequest = new DataMuseRequest().topics("Car", "Road");
-        String randomWord = RandomWordGenerator.getRandomWord(customRequest);
+        String randomWord = "RandomWord";
 
         WebElement username = appiumDriver.findElement(By.id("username"));
         WebElement login = appiumDriver.findElement(By.xpath(byXpath));
