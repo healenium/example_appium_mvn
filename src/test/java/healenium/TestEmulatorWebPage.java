@@ -33,7 +33,7 @@ public class TestEmulatorWebPage {
 
     @Test
     public void testXpathAnd() {
-        String mainPageUrl = "https://elenastepuro.github.io/test_env/index.html";
+        String mainPageUrl = "https://healenium.github.io/healenium-test-env/index.html";
 
         appiumDriver.get(mainPageUrl);
 
